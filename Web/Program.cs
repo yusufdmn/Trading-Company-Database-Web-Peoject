@@ -16,6 +16,7 @@ public class Program
         builder.Services.AddScoped<SqlConnector>();
         builder.Services.AddScoped<ProducerRepository>();
         builder.Services.AddScoped<FurnitureRepository>();
+
         builder.Services.AddScoped<CustomerRepository>();
 
 
@@ -29,6 +30,7 @@ public class Program
         using (var scope = app.Services.CreateScope())
         {
             var serviceProvider = scope.ServiceProvider;
+
             var furnitureRepository = serviceProvider.GetRequiredService<FurnitureRepository>();
 
             // Execute GetAll function
