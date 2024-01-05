@@ -18,6 +18,8 @@ public class Program
         builder.Services.AddScoped<FurnitureRepository>();
 
         builder.Services.AddScoped<CustomerRepository>();
+        builder.Services.AddScoped<SellingPlatformRepository>();
+        builder.Services.AddScoped<ShippingRepository>();
 
 
 
