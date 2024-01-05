@@ -32,7 +32,12 @@ public class FurnitureRepository
                     furniture.FurnitureType = reader["FurnitureType"].ToString().ElementAt(0);
                     furniture.TreeMaterial = reader["TreeMaterial"].ToString();
                     furniture.Name = reader["Name"].ToString();
-                    furniture.BasePrice= decimal.Parse(reader["BasePrice"].ToString());
+
+                    furniture.BasePrice = reader["BasePrice"] is Decimal price ? price : 0;
+                    
+                    
+
+                    
                     
                     furnitures.Add(furniture);
                 }
@@ -48,8 +53,50 @@ public class FurnitureRepository
 
         return furnitures;
     }
-    
 
+    public async Task<int?> Insert(
+        string name,
+        decimal? basePrice,
+        string? treeMaterial,
+        char furnitureType,
+        string color
+        )
+    {
+        int sku = -1;
+        try
+        {
+            using (SqlConnection conn = _connector.SqlConnection)
+            {
+                conn.Open();
+                SqlCommand command = conn.CreateCommand();
+
+                
+               
+                string str = "('"+name+"',"+basePrice+",'"+treeMaterial+"','"+furnitureType+"')";
+                
+                
+                command.CommandText = @"
+                INSERT INTO Furniture (Name, BasePrice, TreeMaterial, FurnitureType) OUTPUT INSERTED.SKU
+                VALUES " + str;
+                
+                sku = (int) await command.ExecuteScalarAsync() ;
+
+                str = "("+sku+",'"+color+"')";
+                command.CommandText = @"
+                INSERT INTO Furniture_Color (SKU,Color)
+                VALUES " + str;
+                await command.ExecuteNonQueryAsync();
+
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+            // Consider logging or handling the exception appropriately.
+        }
+
+        return sku;
+    }
 
 
 }

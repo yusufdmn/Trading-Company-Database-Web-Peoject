@@ -16,8 +16,8 @@ public class Program
         builder.Services.AddScoped<SqlConnector>();
         builder.Services.AddScoped<ProducerRepository>();
         builder.Services.AddScoped<FurnitureRepository>();
-        builder.Services.AddScoped<SellingPlatformRepository>();
-        builder.Services.AddScoped<ShippingRepository>();
+
+        builder.Services.AddScoped<CustomerRepository>();
 
 
 
@@ -30,19 +30,47 @@ public class Program
         using (var scope = app.Services.CreateScope())
         {
             var serviceProvider = scope.ServiceProvider;
-            var shippingRepository = serviceProvider.GetRequiredService<ShippingRepository>();
+
+            var furnitureRepository = serviceProvider.GetRequiredService<FurnitureRepository>();
 
             // Execute GetAll function
-            var shippings = await shippingRepository.GetAll();
+            var furnitureList = await furnitureRepository.GetAll();
 
             // Print contents of the returned list
-            foreach (var s in shippings)
+            foreach (var furniture in furnitureList)
             {
-                Console.WriteLine($"{s.ToString()}\n");
+                Console.WriteLine($"SKU: {furniture.SKU}, Name: {furniture.Name}, Type: {furniture.FurnitureType}, Material: {furniture.TreeMaterial}, Price: {furniture.BasePrice}");
             }
         }
+        //using (var scope = app.Services.CreateScope())
+        //{
+        //    var serviceProvider = scope.ServiceProvider;
+        //    var furnitureRepository = serviceProvider.GetRequiredService<FurnitureRepository>();
+
+        //    // Execute GetAll function
+        //    var sku = await furnitureRepository.Insert(
+        //        "yeniname",180,"tahta",'F',"Mavi"
+        //        );
+
+        //    // Print contents of the returned list
+        //        Console.WriteLine($"SKU:{sku}");
+        //}
+        //using (var scope = app.Services.CreateScope())
+        //{
+        //    var serviceProvider = scope.ServiceProvider;
+        //    var customerRepository = serviceProvider.GetRequiredService<CustomerRepository>();
+
+        //    // Execute GetAll function
+        //    var customerList = await customerRepository.GetAll();
+
+        //    // Print contents of the returned list
 
 
+        //    foreach(var each in customerList)
+        //    {
+        //        Console.WriteLine(each.Name);
+        //    }
+        //}
 
 
         // Configure the HTTP request pipeline.
