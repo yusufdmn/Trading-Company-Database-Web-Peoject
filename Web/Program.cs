@@ -20,7 +20,8 @@ public class Program
         builder.Services.AddScoped<CustomerRepository>();
         builder.Services.AddScoped<SellingPlatformRepository>();
         builder.Services.AddScoped<ShippingRepository>();
-
+        builder.Services.AddScoped<OrderRepository>();
+        builder.Services.AddScoped<OrderlineRepository>();
 
 
         // Add services to the container.
@@ -44,6 +45,36 @@ public class Program
                 Console.WriteLine($"SKU: {furniture.SKU}, Name: {furniture.Name}, Type: {furniture.FurnitureType}, Material: {furniture.TreeMaterial}, Price: {furniture.BasePrice}");
             }
         }
+
+        using (var scope = app.Services.CreateScope())
+        {
+            var serviceProvider = scope.ServiceProvider;
+            var orderlineRepository = serviceProvider.GetRequiredService<OrderlineRepository>();
+
+            // Execute GetAll function
+            await orderlineRepository.Insert(
+                25, 1, 30,1
+            );
+
+            // Print contents of the returned list
+           
+        }
+
+        //using (var scope = app.Services.CreateScope())
+        //{
+        //    var serviceProvider = scope.ServiceProvider;
+        //    var orderRepository = serviceProvider.GetRequiredService<OrderRepository>();
+
+        //    // Execute GetAll function
+        //    var orderID = await orderRepository.Insert(
+        //        "asdas.htlm", 1, "https://www.facebook.com/Tinellawoods/"
+        //    );
+
+        //    // Print contents of the returned list
+        //    Console.WriteLine($"OrderID:{orderID}");
+        //}
+
+
         //using (var scope = app.Services.CreateScope())
         //{
         //    var serviceProvider = scope.ServiceProvider;
