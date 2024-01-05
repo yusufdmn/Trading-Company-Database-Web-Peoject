@@ -32,8 +32,14 @@
             </div>
         </nav>
     </header>
+
     <div class="container">
+        <!-- This is a comment in HTML  await ProducerRepository.Insert("Ilker","Adana","123",null) -->
+        
         @await Html.PartialAsync("_ProducersPartial", await ProducerRepository.GetAll())
+ 
+        
+        
         <main role="main" class="pb-3">
             @RenderBody()
         </main>

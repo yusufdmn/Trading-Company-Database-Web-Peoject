@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Microsoft.AspNetCore.Http;
+using System.Collections;
 using System.Data.SqlClient;
 using Web.Entities;
 
@@ -23,10 +24,10 @@ public class ProducerRepository
             try
             {
                 
-                conn.Open();
-                SqlDataReader reader = command.ExecuteReader();
+                await conn.OpenAsync();
+                SqlDataReader reader = await command.ExecuteReaderAsync();
 
-                while (reader.Read())
+                while (await reader.ReadAsync())
                 {
                     Producer producer = new Producer();
                     producer.ID = int.Parse(reader["ID"].ToString());
@@ -37,7 +38,7 @@ public class ProducerRepository
                     producers.Add(producer);
                 }
 
-                reader.Close();
+               await reader.CloseAsync();
             }
             catch (Exception ex)
             {
@@ -49,6 +50,33 @@ public class ProducerRepository
 
     }
 
+    public async Task<int?> Insert(string? name, string? location, string? phoneNumber, string? email)
+    {
+        int outp = 0;
+        try
+        {
+            using (SqlConnection conn = _connector.SqlConnection)
+            {
+                conn.Open();
+                SqlCommand command = conn.CreateCommand();
+
+                string str = "('"+name+"','"+location+"','"+phoneNumber+"','"+email+"')";
+                command.CommandText = @"
+                INSERT INTO Producer (Name, Location, PhoneNumber, Email)
+                VALUES "+str;
+
+                outp = await command.ExecuteNonQueryAsync();
+                
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+            // Consider logging or handling the exception appropriately.
+        }
+
+        return outp;
+    }
 
 
 
