@@ -38,7 +38,7 @@ public class ProducerRepository
                     producers.Add(producer);
                 }
 
-               await reader.CloseAsync();
+                await reader.CloseAsync();
             }
             catch (Exception ex)
             {

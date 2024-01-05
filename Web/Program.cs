@@ -16,6 +16,8 @@ public class Program
         builder.Services.AddScoped<SqlConnector>();
         builder.Services.AddScoped<ProducerRepository>();
         builder.Services.AddScoped<FurnitureRepository>();
+        builder.Services.AddScoped<SellingPlatformRepository>();
+        builder.Services.AddScoped<ShippingRepository>();
 
 
 
@@ -25,20 +27,20 @@ public class Program
         var app = builder.Build();
 
 
-        //using (var scope = app.Services.CreateScope())
-        //{
-        //    var serviceProvider = scope.ServiceProvider;
-        //    var furnitureRepository = serviceProvider.GetRequiredService<FurnitureRepository>();
+        using (var scope = app.Services.CreateScope())
+        {
+            var serviceProvider = scope.ServiceProvider;
+            var shippingRepository = serviceProvider.GetRequiredService<ShippingRepository>();
 
-        //    // Execute GetAll function
-        //    var furnitureList = await furnitureRepository.GetAll();
+            // Execute GetAll function
+            var shippings = await shippingRepository.GetAll();
 
-        //    // Print contents of the returned list
-        //    foreach (var furniture in furnitureList)
-        //    {
-        //        Console.WriteLine($"SKU: {furniture.SKU}, Name: {furniture.Name}, Type: {furniture.FurnitureType}, Material: {furniture.TreeMaterial}, Price: {furniture.BasePrice}");
-        //    }
-        //}
+            // Print contents of the returned list
+            foreach (var s in shippings)
+            {
+                Console.WriteLine($"{s.ToString()}\n");
+            }
+        }
 
 
 
