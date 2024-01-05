@@ -32,7 +32,12 @@ public class FurnitureRepository
                     furniture.FurnitureType = reader["FurnitureType"].ToString().ElementAt(0);
                     furniture.TreeMaterial = reader["TreeMaterial"].ToString();
                     furniture.Name = reader["Name"].ToString();
-                    furniture.BasePrice= decimal.Parse(reader["BasePrice"].ToString());
+
+                    furniture.BasePrice = reader["BasePrice"] is Decimal price ? price : 0;
+                    
+                    
+
+                    
                     
                     furnitures.Add(furniture);
                 }

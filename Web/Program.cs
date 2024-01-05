@@ -16,6 +16,7 @@ public class Program
         builder.Services.AddScoped<SqlConnector>();
         builder.Services.AddScoped<ProducerRepository>();
         builder.Services.AddScoped<FurnitureRepository>();
+        builder.Services.AddScoped<CustomerRepository>();
 
 
 
@@ -25,34 +26,49 @@ public class Program
         var app = builder.Build();
 
 
-        //using (var scope = app.Services.CreateScope())
-        //{
-        //    var serviceProvider = scope.ServiceProvider;
-        //    var furnitureRepository = serviceProvider.GetRequiredService<FurnitureRepository>();
-
-        //    // Execute GetAll function
-        //    var furnitureList = await furnitureRepository.GetAll();
-
-        //    // Print contents of the returned list
-        //    foreach (var furniture in furnitureList)
-        //    {
-        //        Console.WriteLine($"SKU: {furniture.SKU}, Name: {furniture.Name}, Type: {furniture.FurnitureType}, Material: {furniture.TreeMaterial}, Price: {furniture.BasePrice}");
-        //    }
-        //}
         using (var scope = app.Services.CreateScope())
         {
             var serviceProvider = scope.ServiceProvider;
             var furnitureRepository = serviceProvider.GetRequiredService<FurnitureRepository>();
 
             // Execute GetAll function
-            var sku = await furnitureRepository.Insert(
-                "yeniname",180,"tahta",'F',"Mavi"
-                );
+            var furnitureList = await furnitureRepository.GetAll();
 
             // Print contents of the returned list
-                Console.WriteLine($"SKU:{sku}");
+            foreach (var furniture in furnitureList)
+            {
+                Console.WriteLine($"SKU: {furniture.SKU}, Name: {furniture.Name}, Type: {furniture.FurnitureType}, Material: {furniture.TreeMaterial}, Price: {furniture.BasePrice}");
+            }
         }
+        //using (var scope = app.Services.CreateScope())
+        //{
+        //    var serviceProvider = scope.ServiceProvider;
+        //    var furnitureRepository = serviceProvider.GetRequiredService<FurnitureRepository>();
 
+        //    // Execute GetAll function
+        //    var sku = await furnitureRepository.Insert(
+        //        "yeniname",180,"tahta",'F',"Mavi"
+        //        );
+
+        //    // Print contents of the returned list
+        //        Console.WriteLine($"SKU:{sku}");
+        //}
+        //using (var scope = app.Services.CreateScope())
+        //{
+        //    var serviceProvider = scope.ServiceProvider;
+        //    var customerRepository = serviceProvider.GetRequiredService<CustomerRepository>();
+
+        //    // Execute GetAll function
+        //    var customerList = await customerRepository.GetAll();
+
+        //    // Print contents of the returned list
+
+
+        //    foreach(var each in customerList)
+        //    {
+        //        Console.WriteLine(each.Name);
+        //    }
+        //}
 
 
         // Configure the HTTP request pipeline.
