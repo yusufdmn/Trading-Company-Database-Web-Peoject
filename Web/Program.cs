@@ -39,7 +39,19 @@ public class Program
         //        Console.WriteLine($"SKU: {furniture.SKU}, Name: {furniture.Name}, Type: {furniture.FurnitureType}, Material: {furniture.TreeMaterial}, Price: {furniture.BasePrice}");
         //    }
         //}
+        using (var scope = app.Services.CreateScope())
+        {
+            var serviceProvider = scope.ServiceProvider;
+            var furnitureRepository = serviceProvider.GetRequiredService<FurnitureRepository>();
 
+            // Execute GetAll function
+            var sku = await furnitureRepository.Insert(
+                "yeniname",180,"tahta",'F',"Mavi"
+                );
+
+            // Print contents of the returned list
+                Console.WriteLine($"SKU:{sku}");
+        }
 
 
 
