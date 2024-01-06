@@ -31,11 +31,9 @@
     
     <button type="button" class="button" onclick="createNewFurniture()">Create New Furniture</button>
 
-    <script>
-        // Define furnitureRepository in the global scope
-        
-        
+    <!-- YourPage.cshtml -->
 
+    <script>
         function createNewFurniture() {
             var furnitureName = document.getElementById("furnitureName").value;
             var basePrice = document.getElementById("price").value;
@@ -48,7 +46,7 @@
                 url: "https://localhost:7012/api/Furniture/Insert",
                 data: JSON.stringify({
                     name: furnitureName,
-                    basePrice: parseFloat(basePrice), 
+                    basePrice: parseFloat(basePrice),
                     treeMaterial: treeMaterial,
                     furnitureType: furnitureType,
                     color: color
@@ -56,15 +54,25 @@
                 contentType: "application/json",
                 success: function (result) {
                     console.log("Furniture inserted successfully. SKU: " + result);
+
+                    // Clear input fields
+                    document.getElementById("furnitureName").value = "";
+                    document.getElementById("price").value = "";
+                    document.getElementById("treeMaterial").value = "";
+
+                    // Display success message
+                    document.getElementById("insertMessage").innerText = "The Furniture is successfully inserted.";
                 },
                 error: function (error) {
                     console.error("Error inserting furniture: ", error);
+                    // Display error message if needed
                 }
             });
         }
-
-
-
     </script>
+
+    <!-- Add a div for displaying messages -->
+    <div id="insertMessage" style="margin-top: 10px;"></div>
+
 </body>
 </html>
