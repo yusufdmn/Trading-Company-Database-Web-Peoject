@@ -49,6 +49,7 @@ public class ShippingRepository
                 }
 
                 await reader.CloseAsync();
+                await conn.CloseAsync();
             }
                 catch (Exception ex)
             {

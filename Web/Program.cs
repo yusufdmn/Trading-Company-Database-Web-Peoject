@@ -30,37 +30,58 @@ public class Program
 
         // Add services to the container.
         builder.Services.AddRazorPages();
-            
+
+
+        builder.Services.AddControllers();
+
+
+        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+        builder.Services.AddEndpointsApiExplorer();
+
+        builder.Services.AddCors(options =>
+        {
+            options.AddDefaultPolicy(builder =>
+            {
+                builder.AllowAnyOrigin()
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
+            });
+        });
+
+
+
+
         var app = builder.Build();
 
+        app.UseCors();
+        app.MapControllers();
+
+        //using (var scope = app.Services.CreateScope())
+        //{
+        //    var serviceProvider = scope.ServiceProvider;
+
+        //    var handler = serviceProvider.GetRequiredService<OrderCreationHandler>();
+
+        //    // Execute GetAll function
+
+        //    int customerId = 10;
+        //    string platformUrl = "https://www.tinellawood.com/";
+
+        //    List<Orderline> orderlines = new List<Orderline>();
+        //    Orderline orderline = new Orderline();
+        //    orderline.SKU = 56;
+        //    orderline.Price = 100;
+        //    Orderline orderline2 = new Orderline();
+        //    orderline2.SKU = 59;
+        //    orderline2.Price = 200;
 
 
-        using (var scope = app.Services.CreateScope())
-        {
-            var serviceProvider = scope.ServiceProvider;
-
-            var handler = serviceProvider.GetRequiredService<OrderCreationHandler>();
-
-            // Execute GetAll function
-
-            int customerId = 10;
-            string platformUrl = "https://www.tinellawood.com/";
-            
-            List<Orderline> orderlines = new List<Orderline>();
-            Orderline orderline = new Orderline();
-            orderline.SKU = 56;
-            orderline.Price = 100;
-            Orderline orderline2 = new Orderline();
-            orderline2.SKU = 59;
-            orderline2.Price = 200;
+        //    orderlines.Add(orderline);
+        //    orderlines.Add(orderline2);
+        //    await handler.Handle(orderlines,customerId,platformUrl);
 
 
-            orderlines.Add(orderline);
-            orderlines.Add(orderline2);
-            await handler.Handle(orderlines,customerId,platformUrl);
-
-            
-        }
+        //}
 
 
         //using (var scope = app.Services.CreateScope())
@@ -155,7 +176,7 @@ public class Program
         app.UseAuthorization();
 
         app.MapRazorPages();
-
+        
         app.Run();
     }
 

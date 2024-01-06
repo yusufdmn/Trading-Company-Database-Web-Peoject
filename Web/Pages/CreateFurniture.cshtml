@@ -1,11 +1,7 @@
 ﻿@page
 @using Web.Repositories
 @model Web.Pages.CreateFurnitureModel
-@{
-    var sqlConnector = new SqlConnector();
-    var furnitureRepository = new FurnitureRepository(sqlConnector);
-    var furnitureInsert = furnitureRepository.Insert;
-}
+@inject Web.Repositories.FurnitureRepository furnitureRepository
 
 <!DOCTYPE html>
 <html lang="en">
@@ -13,7 +9,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Furniture Page</title>
-
+    
     <!-- Link to Stylesheet -->
     <link rel="stylesheet" href="CreateFurniture.cshtml.css">
 </head>
@@ -32,33 +28,43 @@
     <label for="TreeMaterial">Tree Material: </label>
     <input type="text" id="treeMaterial" name="treeMaterial" class="Input-text" placeholder="Tree Material">
     <p></p>
-
+    
     <button type="button" class="button" onclick="createNewFurniture()">Create New Furniture</button>
 
     <script>
         // Define furnitureRepository in the global scope
-        var furnitureInsert = @Html.Raw(Json.Serialize(furnitureInsert));
+        
+        
 
         function createNewFurniture() {
-            // Get values from input fields
             var furnitureName = document.getElementById("furnitureName").value;
             var basePrice = document.getElementById("price").value;
             var treeMaterial = document.getElementById("treeMaterial").value;
-
-            // Replace with the actual furniture type and color
             var furnitureType = 'T';
             var color = 'Red';
 
-            furnitureInsert(furnitureName, basePrice, treeMaterial, furnitureType, color)
-                .then(function (result) {
-                    // Handle the result, e.g., display a success message or navigate to another page
+            $.ajax({
+                type: "POST",
+                url: "https://localhost:7012/api/Furniture/Insert",
+                data: JSON.stringify({
+                    name: furnitureName,
+                    basePrice: parseFloat(basePrice), 
+                    treeMaterial: treeMaterial,
+                    furnitureType: furnitureType,
+                    color: color
+                }),
+                contentType: "application/json",
+                success: function (result) {
                     console.log("Furniture inserted successfully. SKU: " + result);
-                })
-                .catch(function (error) {
-                    // Handle errors, e.g., display an error message
-                    console.error("Error inserting furniture: " + error.message);
-                });
+                },
+                error: function (error) {
+                    console.error("Error inserting furniture: ", error);
+                }
+            });
         }
+
+
+
     </script>
 </body>
 </html>

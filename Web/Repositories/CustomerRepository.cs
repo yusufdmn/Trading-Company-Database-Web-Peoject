@@ -41,6 +41,7 @@ public class CustomerRepository
                 }
 
                 await reader.CloseAsync();
+                await conn.CloseAsync();
             }
             catch (Exception ex)
             {

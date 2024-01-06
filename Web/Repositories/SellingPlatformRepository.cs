@@ -37,7 +37,10 @@ namespace Web.Repositories
                     }
 
                     await reader.CloseAsync();
+
+                    await conn.CloseAsync();
                 }
+                
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex.Message);

@@ -43,6 +43,7 @@ public class FurnitureRepository
                 }
 
                 await reader.CloseAsync();
+                await conn.CloseAsync();
             }
             catch (Exception ex)
             {

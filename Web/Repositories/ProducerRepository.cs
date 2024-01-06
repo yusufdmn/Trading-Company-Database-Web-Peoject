@@ -57,7 +57,7 @@ public class ProducerRepository
         {
             using (SqlConnection conn = _connector.SqlConnection)
             {
-                conn.Open();
+                await conn.OpenAsync();
                 SqlCommand command = conn.CreateCommand();
 
                 string str = "('"+name+"','"+location+"','"+phoneNumber+"','"+email+"')";
@@ -66,7 +66,7 @@ public class ProducerRepository
                 VALUES "+str;
 
                 outp = await command.ExecuteNonQueryAsync();
-                
+                await conn.OpenAsync();
             }
         }
         catch (Exception ex)
