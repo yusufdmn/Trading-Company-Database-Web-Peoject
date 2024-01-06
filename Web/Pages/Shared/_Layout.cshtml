@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Web.styles.css" asp-append-version="true" />
+
 </head>
 <body>
     <header>
@@ -25,7 +26,10 @@
                             <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
+                            <a class="nav-link text-dark" asp-area="" asp-page="/CreateOrder">Create Order</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-page="/CreateFurniture">Create Furniture</a>
                         </li>
                     </ul>
                 </div>
@@ -35,9 +39,7 @@
 
     <div class="container">
         <!-- This is a comment in HTML  await ProducerRepository.Insert("Ilker","Adana","123",null) -->
-        
-        @await Html.PartialAsync("_ProducersPartial", await ProducerRepository.GetAll())
- 
+         
         
         
         <main role="main" class="pb-3">
