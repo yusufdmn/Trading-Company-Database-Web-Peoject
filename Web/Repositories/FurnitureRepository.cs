@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System.Data.SqlClient;
+using System.Net.Sockets;
+using System.Security.Cryptography;
 using Web.Entities;
 
 namespace Web.Repositories;
@@ -51,6 +53,48 @@ public class FurnitureRepository
             }
         }
         
+
+        return furnitures;
+    }
+
+    public async Task<IList<Furniture>> GetNotOrderedFurnitures(string queryString = "Select * from ViewFurnitureStock")
+    {
+        List<Furniture> furnitures = new List<Furniture>();
+        SqlConnection conn = _connector.SqlConnection;
+        using (SqlCommand command = new SqlCommand(queryString, conn))
+        {
+            try
+            {
+
+                await conn.OpenAsync();
+                SqlDataReader reader = await command.ExecuteReaderAsync();
+
+                while (await reader.ReadAsync())
+                {
+                    Furniture furniture = new Furniture();
+                    furniture.SKU = int.Parse(reader["FurnitureSKU"].ToString());
+                    furniture.FurnitureType = reader["FurnitureType"].ToString().ElementAt(0);
+                    furniture.TreeMaterial = reader["TreeMaterial"].ToString();
+                    furniture.Name = reader["Name"].ToString();
+
+                    furniture.BasePrice = reader["BasePrice"] is Decimal price ? price : 0;
+
+
+
+
+
+                    furnitures.Add(furniture);
+                }
+
+                await reader.CloseAsync();
+                await conn.CloseAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
 
         return furnitures;
     }

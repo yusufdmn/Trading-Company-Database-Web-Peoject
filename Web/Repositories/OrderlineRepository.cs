@@ -23,7 +23,7 @@ public class OrderlineRepository
         int orderlineID = -1;
         try
         {
-            using (SqlConnection conn = _sqlConnector.SqlConnection)
+            using (SqlConnection conn = new SqlConnection("Server=DESKTOP-DFKHOH6;Database=TinellaWoodDb; Trusted_Connection=True;"))
             {
                 await conn.OpenAsync();
                 SqlCommand command = conn.CreateCommand();

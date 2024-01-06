@@ -4,7 +4,7 @@
 @{
     var sqlConnector = new SqlConnector();
     var furnitureRepository = new FurnitureRepository(sqlConnector);
-    var furnitures = furnitureRepository.GetAll().Result;
+    var furnitures = furnitureRepository.GetNotOrderedFurnitures().Result;
 
     var sqlConnector2 = new SqlConnector();
     var customerRepository = new CustomerRepository(sqlConnector2);
@@ -26,85 +26,142 @@
 
     <!-- Your HTML content here -->
 
+<div>
+        <label for="FurnitureName">CustomerID</label>
+        <input type="text" id="customerId" name="filterName" class="Input-text" placeholder="Furniture Name">
+        <p></p>
+        <p></p>
 
-    <label for="FurnitureName">Furniture Name: </label>
-    <input type="text" id="filterName" name="filterName" class="Input-text" placeholder="Furniture Name">
-    <p></p>
-    <p></p>
+        <label for="Platform">Select a Platform:</label>
+        <!-- Dropdown Select -->
+        <select id="platform" name="platform">
+            <option value="https://www.instagram.com/tinellawood/">Instagram</option>
+            <option value="https://www.facebook.com/Tinellawoods/">Facebook</option>
+            <option value="https://www.tinellawood.com/">Website</option>
+        </select>
 
-    <label for="OrderlinePrice">Price: </label>
-    <input type="number" id="price" name="price" class="Input-text" placeholder="Price" min="0">
-    <p></p>
-    <p></p>
-
-    <label for="OrderOrderDate">Order Date: </label>
-    <input type="date" id="orderDate" class="Input-text" name="orderDate">
-    <p></p>
-    <p></p>
-
-    <label for="Platform">Select a Platform:</label>
-    <!-- Dropdown Select -->
-    <select id="platform" name="platform">
-        <option value="instagram">Instagram</option>
-        <option value="facebook">Facebook</option>
-        <option value="website">Website</option>
-    </select>
-
-    <p></p>
-    <p></p>
+        <p></p>
+        <p></p>
 
 
-    <!-- Toggle Options using Radio Buttons -->
-    <label for="Toggle-Title-Label">Shipping Type: </label>
+        <!-- Toggle Options using Radio Buttons -->
+        <label for="Toggle-Title-Label">Shipping Type: </label>
 
 
-    <label class="toggle-label">
-        <input type="radio" name="toggle-option" value="plane"> Plane
-    </label>
+        <label class="toggle-label">
+            <input type="radio" name="toggle-option" value="plane"> Plane
+        </label>
 
-    <label class="toggle-label">
-        <input type="radio" name="toggle-option" value="ship"> Ship
-    </label>
+        <label class="toggle-label">
+            <input type="radio" name="toggle-option" value="ship"> Ship
+        </label>
 
-    <label class="toggle-label">
-        <input type="radio" name="toggle-option" value="truck"> Truck
-    </label>
+        <label class="toggle-label">
+            <input type="radio" name="toggle-option" value="truck"> Truck
+        </label>
 
-    <p></p>
-    <p></p>
-
-
-    <!-- Multi-Select Options using Checkboxes -->
-    <label for="Toggle-Title-Label">Something: </label>
-    <label class="checkbox-label">
-        <input type="checkbox" name="option1" value="option1"> Option 1
-    </label>
-
-    <label class="checkbox-label">
-        <input type="checkbox" name="option2" value="option2"> Option 2
-    </label>
-
-    <label class="checkbox-label">
-        <input type="checkbox" name="option3" value="option3"> Option 3
-    </label>
-
-    <p></p>
-    <p></p>
-    <p></p>
-    <p></p>
+        
 
 
-    <!-- Number Input for Furniture Count -->
-    <label class="input-label" for="furnitureCount">Furniture Count:</label>
-    <input type="number" id="furnitureCount" name="furnitureCount" min="0">
+        <!-- Multi-Select Options using Checkboxes -->
+        <label for="Toggle-Title-Label">Something: </label>
+        <label class="checkbox-label">
+            <input type="checkbox" name="option1" value="option1"> Option 1
+        </label>
 
-    <!-- Button to Generate Number Input Fields -->
-    <button type="button" class="button" onclick="generateNumberInputFields()">Create Furniture Fields</button>
+        <label class="checkbox-label">
+            <input type="checkbox" name="option2" value="option2"> Option 2
+        </label>
 
-    <!-- Container to Hold Dynamically Generated Input Fields -->
-    <div id="inputFieldsContainer"></div>
+        <label class="checkbox-label">
+            <input type="checkbox" name="option3" value="option3"> Option 3
+        </label>
 
-    <script>
+        
+
+
+        <!-- Number Input for Furniture Count -->
+        <label class="input-label" for="furnitureCount">Furniture Count:</label>
+        <input type="number" id="furnitureCount" name="furnitureCount" min="0">
+
+        <!-- Button to Generate Number Input Fields -->
+        <button type="button" class="button" onclick="generateNumberInputFields()">Create Furniture Fields</button>
+
+        <!-- Container to Hold Dynamically Generated Input Fields -->
+        <div id="inputFieldsContainer"></div>
+
+
+
+        <p></p>
+
+        <button type="button" class="button" onclick="makeOrder()">Create New Order</button>
+</div>
+    
+
+
+
+<div>
+	<h2>Furniture Information</h2>
+	<table>
+		<thead>
+		<tr>
+			<th>SKU</th>
+			<th>Furniture Type</th>
+			<th>Tree Material</th>
+			<th>Name</th>
+			<th>Base Price</th>
+		</tr>
+		</thead>
+		<tbody>
+		@foreach (var furniture in furnitures)
+		{
+			<tr id="SKU_@furniture.SKU">
+				<td>@furniture.SKU</td>
+				<td>@furniture.FurnitureType</td>
+				<td>@furniture.TreeMaterial</td>
+				<td>@furniture.Name</td>
+				<td>@furniture.BasePrice</td>
+			</tr>
+		}
+		</tbody>
+	</table>
+</div>
+    
+        
+<div>
+	<h2>Customer Information</h2>
+	<table>
+		<thead>
+		<tr>
+			<th>ID</th>
+			<th>Name</th>
+			<th>Country</th>
+			<th>State</th>
+			<th>Phone Number</th>
+		</tr>
+		</thead>
+		<tbody>
+		@foreach (var customer in customers)
+		{
+			<tr>
+				<td>@customer.ID</td>
+				<td>@customer.Name</td>
+				<td>@customer.Country</td>
+				<td>@customer.State</td>
+				<td>@customer.PhoneNumber</td>
+			</tr>
+		}
+		</tbody>
+	</table>
+</div>
+
+
+	
+    
+    
+
+
+<script>
         function generateNumberInputFields() {
             var furnitureCount = document.getElementById("furnitureCount").value;
 
@@ -115,82 +172,69 @@
                 var inputField = document.createElement("input");
                 inputField.type = "number";
                 inputField.className = "input-number"
-                inputField.name = "ordelineID" + (i + 1);
-                inputField.placeholder = "OrdelineID " + (i + 1);
+                inputField.name = "orderlineID" + (i + 1);
+                inputField.placeholder = "OrderlineID " + (i + 1);
 
                 var label = document.createElement("label");
-                label.appendChild(document.createTextNode("OrdelineID " + (i + 1) + ": "));
+                label.appendChild(document.createTextNode("OrderlineID " + (i + 1) + ": "));
                 label.appendChild(inputField);
 
                 document.getElementById("inputFieldsContainer").appendChild(label);
             }
         }
+
+        function makeOrder() {
+            var customerId = document.getElementById("customerId").value;
+            console.log(" custoemr id :" + customerId)
+            var orderDate = document.getElementById("orderDate").value;
+            var platformURL = document.getElementById("platform").value;
+
+            var furnitureCount = document.getElementById("furnitureCount").value;
+            console.log(furnitureCount)
+            
+            var orderlines = [];
+            
+            for (var i = 0; i < furnitureCount; i++) {
+                var sku = document.getElementsByName("orderlineID" + (i + 1))[0].value;
+                console.log("SKU_" + sku)
+                var furniture = document.getElementById("SKU_" + sku);
+				console.log(furniture)
+				orderlines.push({
+					sku: sku,
+                    price: parseInt(furniture.getElementsByTagName("td")[4].innerText)
+
+				});
+            }
+            
+            console.log(orderlines);
+            console.log(customerId);
+            console.log(platformURL);
+
+
+
+            $.ajax({
+                type: "POST",
+                url: "https://localhost:7012/api/Order/mkorder",
+                data: JSON.stringify({
+                    
+                    
+                    customerId: customerId,
+					platformURL: platformURL,
+                    orderLines: orderlines
+
+                }),
+                contentType: "application/json",
+                success: function (result) {
+                    console.log("Order created ");
+                },
+                error: function (error) {
+                    console.error("Error creating order: ", error);
+                }
+            });
+        }
+
+
     </script>
-
-    <p></p>
-
-	<button type="button" class="button">Create New Order</button>
-
-
-
-
-    
-        <h2>Furniture Information</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>SKU</th>
-                <th>Furniture Type</th>
-                <th>Tree Material</th>
-                <th>Name</th>
-                <th>Base Price</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var furniture in furnitures)
-            {
-                <tr>
-                    <td>@furniture.SKU</td>
-                    <td>@furniture.FurnitureType</td>
-                    <td>@furniture.TreeMaterial</td>
-                    <td>@furniture.Name</td>
-                    <td>@furniture.BasePrice</td>
-                </tr>
-            }
-        </tbody>
-    </table>
-
-
-
-	
-    <h2>Customer Information</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Country</th>
-                <th>State</th>
-                <th>Phone Number</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var customer in customers)
-            {
-                <tr>
-                    <td>@customer.ID</td>
-                    <td>@customer.Name</td>
-                    <td>@customer.Country</td>
-                    <td>@customer.State</td>
-                    <td>@customer.PhoneNumber</td>
-                </tr>
-            }
-        </tbody>
-    </table>
-    
-
-
-
 
 </body>
 </html>
