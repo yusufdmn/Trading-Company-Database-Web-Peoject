@@ -16,29 +16,43 @@ public class OrderlineRepository
     public async Task Insert(
         decimal price,
         int sku,
-        int orderID,
+        int? orderID,
         int? shippingID = null)
         {
 
         int orderlineID = -1;
         try
         {
-            using (SqlConnection conn = _sqlConnector.SqlConnection)
+            using (SqlConnection conn = new SqlConnection("Server=(localdb)\\MSSQLLocalDB;Database=TinellaWoodDb; Trusted_Connection=True;"))
             {
                 conn.Open();
                 SqlCommand command = conn.CreateCommand();
 
+                if(shippingID != null)
+                {
+                    string str = "('" + price + "'," + sku + ",'" + orderID + "','" + shippingID + "')";
 
 
-                string str = "('" + price + "'," + sku + ",'" + orderID + "','" + shippingID+ "')";
-
-
-                command.CommandText = @"
+                    command.CommandText = @"
                 INSERT INTO Orderline (Price, SKU, OrderID, ShippingID) 
                 VALUES "
-                                      + str;
+                                          + str;
+                }
+                else
+                {
+                    string str = "('" + price + "'," + sku + "," + orderID  +")";
 
-                orderlineID = (int) await command.ExecuteScalarAsync();
+
+                    command.CommandText = @"
+                INSERT INTO Orderline (Price, SKU, OrderID) 
+                VALUES "
+                                          + str;
+                }
+
+
+                
+
+               await command.ExecuteScalarAsync();
                 
 
             }
@@ -47,7 +61,7 @@ public class OrderlineRepository
         {
             Console.WriteLine(ex.Message);
             // Consider logging or handling the exception appropriately.
-            
         }
+
     }
 }

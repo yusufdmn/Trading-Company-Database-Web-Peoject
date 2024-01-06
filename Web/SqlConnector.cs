@@ -6,7 +6,7 @@ namespace Web;
 public class SqlConnector
 {
 
-    private String ConnectionString { get; } = "Server=DESKTOP-DFKHOH6;Database=TinellaWoodDb; Trusted_Connection=True;";
+    private String ConnectionString { get; } = "Server=(localdb)\\MSSQLLocalDB;Database=TinellaWoodDb; Trusted_Connection=True;";
 
     public SqlConnection SqlConnection { get; set; }
 
