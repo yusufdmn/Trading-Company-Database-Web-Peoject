@@ -3,6 +3,7 @@
 @model Web.Pages.CreateFurnitureModel
 @inject Web.Repositories.FurnitureRepository furnitureRepository
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,7 +16,7 @@
 </head>
 <body>
 
-    <!-- Your HTML content here -->
+    <h1>CREATE FURNITURE</h1>
 
     <label for="FurnitureName">Furniture Name: </label>
     <input type="text" id="furnitureName" name="furnitureName" class="Input-text" placeholder="Furniture Name">
@@ -28,18 +29,31 @@
     <label for="TreeMaterial">Tree Material: </label>
     <input type="text" id="treeMaterial" name="treeMaterial" class="Input-text" placeholder="Tree Material">
     <p></p>
-    
+
+    <label for="colorSelect">Color:</label>
+
+    <select id="color" name="color">
+        <option value="">Please Select</option>
+        <option value="Red">Red</option>
+        <option value="Blue">Blue</option>
+        <option value="Black">Black</option>
+        <option value="Brown">Brown</option>
+        <option value="Silver">Silver</option>
+        <option value="Gold">Gold</option>
+    </select>
+    <p></p>
     <button type="button" class="button" onclick="createNewFurniture()">Create New Furniture</button>
 
-    <!-- YourPage.cshtml -->
+
+    <div id="insertMessage" style="margin-top: 10px;"></div>
 
     <script>
         function createNewFurniture() {
             var furnitureName = document.getElementById("furnitureName").value;
             var basePrice = document.getElementById("price").value;
             var treeMaterial = document.getElementById("treeMaterial").value;
+            var color = document.getElementById("color").value;
             var furnitureType = 'T';
-            var color = 'Red';
 
             $.ajax({
                 type: "POST",
@@ -59,20 +73,19 @@
                     document.getElementById("furnitureName").value = "";
                     document.getElementById("price").value = "";
                     document.getElementById("treeMaterial").value = "";
+                    document.getElementById("color").value = ""
 
-                    // Display success message
                     document.getElementById("insertMessage").innerText = "The Furniture is successfully inserted.";
                 },
                 error: function (error) {
                     console.error("Error inserting furniture: ", error);
-                    // Display error message if needed
+
                 }
             });
         }
     </script>
 
-    <!-- Add a div for displaying messages -->
-    <div id="insertMessage" style="margin-top: 10px;"></div>
+
 
 </body>
 </html>

@@ -1,0 +1,139 @@
+﻿@page
+@using Web.Repositories
+@inject Web.Repositories.FurnitureRepository furnitureRepository
+@model Web.Pages.UpdateFurnitureModel
+@{
+    var furnitures = furnitureRepository.GetNotOrderedFurnitures().Result;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Furniture Page</title>
+    
+    <!-- Link to Stylesheet -->
+    <link rel="stylesheet" href="UpdateFurniture.cshtml.css">
+</head>
+<body>
+
+    <h1>UPDATE FURNITURE</h1>
+    <p></p>
+    <!-- Your HTML content here -->
+    <div>
+    <label>Furniture SKU: </label>
+
+    <select id="skuDropdown" name="skuDropdown">
+        <option value="">Please Select</option>
+        @foreach (var furniture in furnitures)
+        {
+            <option value=@furniture.SKU>SKU: @furniture.SKU</option>
+        }
+    </select>
+
+    <p></p>
+
+    <label for="furnitureName">Furniture Name: </label>
+    <input type="text" id="furnitureName" name="furnitureName" class="Input-text" placeholder="Furniture Name">
+    <p></p>
+
+    <label for="price">Base Price: </label>
+    <input type="number" id="price" name="price" class="Input-text" placeholder="Price" min="0">
+    <p></p>
+
+    <label for="treeMaterial">Tree Material: </label>
+    <input type="text" id="treeMaterial" name="treeMaterial" class="Input-text" placeholder="Tree Material">
+    <p></p>
+    
+    <label for="colorSelect">Color:</label>
+    <!-- Dropdown Select -->
+    <select id="color" name="color">
+        <option value="">Please Select</option>
+        <option value="Red">Red</option>
+        <option value="Blue">Blue</option>
+        <option value="Black">Black</option>
+        <option value="Brown">Brown</option>
+        <option value="Silver">Silver</option>
+        <option value="Gold">Gold</option>
+    </select>
+
+    <p></p>
+
+    <button type="button" class="button" onclick="updateFurniture()">Update Furniture</button>
+   
+    <div id="Message" style="margin-top: 10px;"></div>
+
+	</div>
+
+    <p></p>
+     <h2>Furniture Information</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>SKU</th>
+                    <th>Furniture Type</th>
+                    <th>Tree Material</th>
+                    <th>Name</th>
+                    <th>Base Price</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var furniture in furnitures)
+                {
+                    <tr id="SKU_@furniture.SKU">
+                        <td>@furniture.SKU</td>
+                        <td>@furniture.FurnitureType</td>
+                        <td>@furniture.TreeMaterial</td>
+                        <td>@furniture.Name</td>
+                        <td>@furniture.BasePrice</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+
+    <script>
+        function updateFurniture() {
+            var furnitureName = document.getElementById("furnitureName").value;
+            var basePrice = document.getElementById("price").value;
+            var treeMaterial = document.getElementById("treeMaterial").value;
+            var color = document.getElementById("color").value; // Change name to "color"
+            var sku = document.getElementById("skuDropdown").value;
+            var furnitureType = 'T';
+
+            $.ajax({
+                type: "POST",
+                url: "https://localhost:7012/api/Furniture/Update",
+                data: JSON.stringify({
+                    sku: sku,
+                    name: furnitureName,
+                    basePrice: parseFloat(basePrice),
+                    treeMaterial: treeMaterial,
+                    furnitureType: furnitureType,
+                    color: color
+                }),
+                contentType: "application/json",
+                success: function (result) {
+                    console.log("Furniture Updated successfully. SKU: " + result);
+
+                    // Clear input fields
+                    document.getElementById("furnitureName").value = "";
+                    document.getElementById("price").value = "";
+                    document.getElementById("treeMaterial").value = "";
+                    document.getElementById("color").value = "";
+                    document.getElementById("skuDropdown").value = "";
+
+                    document.getElementById("Message").innerText = "The Furniture is successfully Updated.";
+                },
+                error: function (error) {
+                    console.error("Error Updating furniture: ", error);
+                }
+            });
+        }
+    </script>
+
+
+
+</body>
+</html>

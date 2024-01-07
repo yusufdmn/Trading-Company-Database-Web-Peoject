@@ -1,13 +1,10 @@
 ﻿@page
 @using Web.Repositories
+@inject Web.Repositories.FurnitureRepository furnitureRepository
+@inject Web.Repositories.CustomerRepository customerRepository
 @model Web.Pages.CreateOrderModel
 @{
-    var sqlConnector = new SqlConnector();
-    var furnitureRepository = new FurnitureRepository(sqlConnector);
     var furnitures = furnitureRepository.GetNotOrderedFurnitures().Result;
-
-    var sqlConnector2 = new SqlConnector();
-    var customerRepository = new CustomerRepository(sqlConnector2);
     var customers = customerRepository.GetAll().Result;
 }
 
@@ -24,8 +21,7 @@
 </head>
 <body>
 
-    <!-- Your HTML content here -->
-    <p></p>
+    <h1>CREATE ORDER</h1>
     <p></p>
 
 

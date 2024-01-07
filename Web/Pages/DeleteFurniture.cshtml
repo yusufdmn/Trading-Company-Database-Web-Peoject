@@ -12,29 +12,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Delete Furniture Page</title>
     
-    <!-- Link to Stylesheet -->
     <link rel="stylesheet" href="DeleteFurniture.cshtml.css">
 </head>
 <body>
 
-    <!-- Your HTML content here -->
-    <!-- Your HTML content here -->
+    <h1>DELETE FURNITURE</h1>
+    
+    <p></p>
+    
     <div>
-        <label for="FurnitureSKU">Furniture SKU: </label>
-        <input type="number" id="furnitureSKU" name="furnitureSKU" class="Input-number" placeholder="Furniture SKU">
-        <p></p>
+        <label>Furniture SKU: </label>
+
+        <select id="skuDropdown" name="skuDropdown">
+            <option value="">Please Select</option>
+            @foreach (var furniture in furnitures)
+            {
+                <option value=@furniture.SKU>SKU: @furniture.SKU</option>
+            }
+        </select>
 
         <button type="button" class="button" onclick="deleteFurniture()">Delete Furniture</button>
 
-        <!-- Add a div for displaying messages -->
+
         <div id="Message" style="margin-top: 10px;"></div>
     </div>
 
-    <!-- YourPage.cshtml -->
+    <p></p>
 
     <script>
         function deleteFurniture() {
-            var furnitureSKU = document.getElementById("furnitureSKU").value;
+            var furnitureSKU = document.getElementById("skuDropdown").value;
             console.log(furnitureSKU);
             $.ajax({
                 type: "POST",
@@ -46,21 +53,16 @@
                 success: function (result) {
                     console.log("Furniture deleted successfully. SKU: " + result);
 
-                    // Clear input fields
                     document.getElementById("furnitureSKU").value = "";
 
-                    // Display success message
                     document.getElementById("Message").innerText = "The Furniture is successfully deleted.";
                 },
                 error: function (error) {
                     console.error("Error deleting furniture: ", error);
-                    // Display error message if needed
                 }
             });
         }
     </script>
-
-    <!-- Add a div for displaying messages -->
 
 
 

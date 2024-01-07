@@ -178,4 +178,60 @@ public class FurnitureRepository
         return sku;
     }
 
+
+    public async Task<int?> Update(
+        int sku,
+        string name,
+        decimal? basePrice,
+        string? treeMaterial,
+        char furnitureType,
+        string color
+    )
+    {
+        try
+        {
+            using (SqlConnection conn = _connector.SqlConnection)
+            {
+                conn.Open();
+                SqlCommand command = conn.CreateCommand();
+
+                // Use parameterized queries to prevent SQL injection
+                command.CommandText = @"
+                UPDATE Furniture 
+                SET BasePrice = @BasePrice, TreeMaterial = @TreeMaterial, Name = @Name 
+                WHERE SKU = @SKU";
+
+                // Add parameters
+                command.Parameters.AddWithValue("@BasePrice", basePrice ?? (object)DBNull.Value);
+                command.Parameters.AddWithValue("@TreeMaterial", treeMaterial ?? (object)DBNull.Value);
+                command.Parameters.AddWithValue("@Name", name);
+                command.Parameters.AddWithValue("@SKU", sku);
+
+                // Execute the query
+                await command.ExecuteNonQueryAsync();
+
+                // Update Furniture_Color table
+                command.CommandText = @"
+                UPDATE Furniture_Color 
+                SET Color = @Color 
+                WHERE SKU = @SKU";
+
+                // Add parameter for Color
+                command.Parameters.AddWithValue("@Color", color);
+
+                // Execute the query
+                await command.ExecuteNonQueryAsync();
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+            // Consider logging or handling the exception appropriately.
+        }
+
+        return sku;
+    }
+
+
+
 }
