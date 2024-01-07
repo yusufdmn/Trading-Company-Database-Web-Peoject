@@ -19,14 +19,28 @@ namespace Web.Controllers
         [HttpPost("Insert")]
         public async Task<IActionResult> Insert([FromBody] InsertDto dto)
         {
-            var res = await _furnitureRepository.Insert(dto.Name,dto.BasePrice,dto.TreeMaterial,dto.FurnitureType,dto.Color);
+            var res = await _furnitureRepository.Insert(dto.Name, dto.BasePrice, dto.TreeMaterial, dto.FurnitureType, dto.Color);
             return Created("furniture created", res);
         }
-
-
+        
+        [HttpPost("Delete")]
+        public async Task<IActionResult> Delete([FromBody] DeleteDto dto)
+        {
+            var res = await _furnitureRepository.Delete(dto.SKU);
+            return Created("furniture deleted", res);
+        }
 
     }
 }
+
+
+public class DeleteDto
+{
+    public int SKU { get; set; }
+}
+
+
+
 public class InsertDto
 {
     public string Name { get; set; }

@@ -143,5 +143,39 @@ public class FurnitureRepository
         return sku;
     }
 
+    public async Task<int?> Delete(int sku)
+    {
+        try
+        {
+            using (SqlConnection conn = _connector.SqlConnection)
+            {
+                await conn.OpenAsync();
+                SqlCommand command = conn.CreateCommand();
+
+                // Log the SKU being deleted
+                Console.WriteLine("Deleting furniture with SKU: " + sku);
+
+                // Delete from Furniture_Color
+                command.CommandText = @"
+                DELETE FROM Furniture_Color WHERE SKU = " + sku;
+                await command.ExecuteNonQueryAsync();
+
+                // Delete from Furniture
+                command.CommandText = @"
+                DELETE FROM Furniture WHERE SKU = " + sku;
+                int rowsAffected = await command.ExecuteNonQueryAsync();
+
+                // Log the number of rows affected
+                Console.WriteLine("Rows affected: " + rowsAffected);
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+            // Consider logging or handling the exception appropriately.
+        }
+
+        return sku;
+    }
 
 }
