@@ -1,0 +1,99 @@
+﻿@page
+@model Web.Pages.DeleteFurnitureModel
+@inject Web.Repositories.FurnitureRepository furnitureRepository
+@{
+    var furnitures = furnitureRepository.GetNotOrderedFurnitures().Result;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete Furniture Page</title>
+    
+    <link rel="stylesheet" href="DeleteFurniture.cshtml.css">
+</head>
+<body>
+
+    <h1>DELETE FURNITURE</h1>
+    
+    <p></p>
+    
+    <div>
+        <label>Furniture SKU: </label>
+
+        <select id="skuDropdown" name="skuDropdown">
+            <option value="">Please Select</option>
+            @foreach (var furniture in furnitures)
+            {
+                <option value=@furniture.SKU>SKU: @furniture.SKU</option>
+            }
+        </select>
+
+        <button type="button" class="button" onclick="deleteFurniture()">Delete Furniture</button>
+
+
+        <div id="Message" style="margin-top: 10px;"></div>
+    </div>
+
+    <p></p>
+
+    <script>
+        function deleteFurniture() {
+            var furnitureSKU = document.getElementById("skuDropdown").value;
+            console.log(furnitureSKU);
+            $.ajax({
+                type: "POST",
+                url: "https://localhost:7012/api/Furniture/Delete",
+                data: JSON.stringify({
+                    sku: furnitureSKU
+                }),
+                contentType: "application/json",
+                success: function (result) {
+                    console.log("Furniture deleted successfully. SKU: " + result);
+
+                    document.getElementById("furnitureSKU").value = "";
+
+                    document.getElementById("Message").innerText = "The Furniture is successfully deleted.";
+                },
+                error: function (error) {
+                    console.error("Error deleting furniture: ", error);
+                }
+            });
+        }
+    </script>
+
+
+
+    <div>
+        <h2>Furniture Information</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>SKU</th>
+                    <th>Furniture Type</th>
+                    <th>Tree Material</th>
+                    <th>Name</th>
+                    <th>Base Price</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var furniture in furnitures)
+                {
+                    <tr id="SKU_@furniture.SKU">
+                        <td>@furniture.SKU</td>
+                        <td>@furniture.FurnitureType</td>
+                        <td>@furniture.TreeMaterial</td>
+                        <td>@furniture.Name</td>
+                        <td>@furniture.BasePrice</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+
+
+</body>
+</html>

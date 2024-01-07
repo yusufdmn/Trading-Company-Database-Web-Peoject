@@ -23,9 +23,9 @@ public class OrderlineRepository
         int orderlineID = -1;
         try
         {
-            using (SqlConnection conn = new SqlConnection("Server=(localdb)\\MSSQLLocalDB;Database=TinellaWoodDb; Trusted_Connection=True;"))
+            using (SqlConnection conn = new SqlConnection("Server=DESKTOP-DFKHOH6;Database=TinellaWoodDb; Trusted_Connection=True;"))
             {
-                conn.Open();
+                await conn.OpenAsync();
                 SqlCommand command = conn.CreateCommand();
 
                 if(shippingID != null)
@@ -53,7 +53,7 @@ public class OrderlineRepository
                 
 
                await command.ExecuteScalarAsync();
-                
+               await conn.CloseAsync();
 
             }
         }

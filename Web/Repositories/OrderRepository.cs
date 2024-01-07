@@ -25,7 +25,7 @@ public class OrderRepository
         {
             using (SqlConnection conn = _sqlConnector.SqlConnection)
             {
-                conn.Open();
+                await conn.OpenAsync();
                 SqlCommand command = conn.CreateCommand();
 
 
@@ -39,9 +39,13 @@ public class OrderRepository
                 + str;
 
                 orderID = (int)await command.ExecuteScalarAsync();
+
+                await conn.CloseAsync();
                 return orderID;
 
+                
             }
+            
         }
         catch (Exception ex)
         {

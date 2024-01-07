@@ -1,0 +1,225 @@
+﻿@page
+@using Web.Repositories
+@inject Web.Repositories.FurnitureRepository furnitureRepository
+@inject Web.Repositories.CustomerRepository customerRepository
+@model Web.Pages.CreateOrderModel
+@{
+    var furnitures = furnitureRepository.GetNotOrderedFurnitures().Result;
+    var customers = customerRepository.GetAll().Result;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Order Page</title>
+
+    <!-- Link to Stylesheet -->
+    <link rel="stylesheet" href="CreateOrder.cshtml.css">
+
+</head>
+<body>
+
+    <h1>CREATE ORDER</h1>
+    <p></p>
+
+
+<div>
+        <label for="CustomerID">Customer ID</label>
+        <input type="number" id="customerId" name="customerID" class="Input-text" placeholder="Customer ID">
+
+        <p></p>
+        <p></p>
+
+        <label for="Platform">Select a Platform:</label>
+        <!-- Dropdown Select -->
+        <select id="platform" name="platform">
+            <option value="Not Chosen">Please Select</option>
+            <option value="https://www.instagram.com/tinellawood/">Instagram</option>
+            <option value="https://www.facebook.com/Tinellawoods/">Facebook</option>
+            <option value="https://www.tinellawood.com/">Website</option>
+        </select>
+
+        <p></p>
+        <p></p>
+
+
+
+
+        <!-- Number Input for Furniture Count -->
+        <label class="input-label" for="furnitureCount">Furniture Count:</label>
+        <input type="number" id="furnitureCount" name="furnitureCount" min="0">
+
+        <!-- Button to Generate Number Input Fields -->
+        <button type="button" class="button" onclick="generateNumberInputFields()">Create Furniture Fields</button>
+
+        <!-- Container to Hold Dynamically Generated Input Fields -->
+        <div id="inputFieldsContainer"></div>
+
+
+
+        <p></p>
+
+        <button type="button" class="button" onclick="makeOrder()">Create New Order</button>
+</div>
+    <div id="successMessageContainer"></div>
+
+
+
+
+<div>
+	<h2>Furniture Information</h2>
+	<table>
+		<thead>
+		<tr>
+			<th>SKU</th>
+			<th>Furniture Type</th>
+			<th>Tree Material</th>
+			<th>Name</th>
+			<th>Base Price</th>
+		</tr>
+		</thead>
+		<tbody>
+		@foreach (var furniture in furnitures)
+		{
+			<tr id="SKU_@furniture.SKU">
+				<td>@furniture.SKU</td>
+				<td>@furniture.FurnitureType</td>
+				<td>@furniture.TreeMaterial</td>
+				<td>@furniture.Name</td>
+				<td>@furniture.BasePrice</td>
+			</tr>
+		}
+		</tbody>
+	</table>
+</div>
+
+    <p></p>        
+
+<div>
+	<h2>Customer Information</h2>
+	<table>
+		<thead>
+		<tr>
+			<th>ID</th>
+			<th>Name</th>
+			<th>Country</th>
+			<th>State</th>
+			<th>Phone Number</th>
+		</tr>
+		</thead>
+		<tbody>
+		@foreach (var customer in customers)
+		{
+			<tr>
+				<td>@customer.ID</td>
+				<td>@customer.Name</td>
+				<td>@customer.Country</td>
+				<td>@customer.State</td>
+				<td>@customer.PhoneNumber</td>
+			</tr>
+		}
+		</tbody>
+	</table>
+</div>
+
+
+	
+    
+    
+
+
+<script>
+        function generateNumberInputFields() {
+            var furnitureCount = document.getElementById("furnitureCount").value;
+
+            // Clear previous input fields
+            document.getElementById("inputFieldsContainer").innerHTML = "";
+
+            for (var i = 0; i < furnitureCount; i++) {
+                var inputField = document.createElement("input");
+                inputField.type = "number";
+                inputField.className = "input-number";
+                inputField.name = "SKU" + (i + 1);
+                inputField.placeholder = "SKU " + (i + 1);
+
+                var label = document.createElement("label");
+                label.appendChild(document.createTextNode("SKU " + (i + 1) + ": "));
+                label.appendChild(inputField);
+
+                // Add a line break after each input field
+                document.getElementById("inputFieldsContainer").appendChild(label);
+                document.getElementById("inputFieldsContainer").appendChild(document.createElement("br")); 
+            }
+        }
+
+
+        function makeOrder() {
+            var customerId = document.getElementById("customerId").value;
+            console.log(" customer id :" + customerId)
+            var platformURL = document.getElementById("platform").value;
+
+            var furnitureCount = document.getElementById("furnitureCount").value;
+            console.log(furnitureCount)
+            
+            var orderlines = [];
+            
+            for (var i = 0; i < furnitureCount; i++) {
+                var sku = document.getElementsByName("SKU" + (i + 1))[0].value;
+                console.log("SKU_" + sku)
+                var furniture = document.getElementById("SKU_" + sku);
+				console.log(furniture)
+				orderlines.push({
+					sku: sku,
+                    price: parseInt(furniture.getElementsByTagName("td")[4].innerText)
+
+				});
+            }
+            
+            console.log(orderlines);
+            console.log(customerId);
+            console.log(platformURL);
+
+
+
+            $.ajax({
+                type: "POST",
+                url: "https://localhost:7012/api/Order/mkorder",
+                data: JSON.stringify({
+                    
+                    
+                    customerId: customerId,
+					platformURL: platformURL,
+                    orderLines: orderlines
+
+                }),
+                contentType: "application/json",
+                success: function (result) {
+                    document.getElementById("customerId").value = "";
+                    document.getElementById("platform").value = "Not Chosen";
+                    document.getElementById("furnitureCount").value = "";
+
+                    // Clear dynamically generated input fields
+                    document.getElementById("inputFieldsContainer").innerHTML = "";
+
+                    // Display success message
+                    var successMessageContainer = document.getElementById("successMessageContainer");
+                    var successMessage = document.createElement("p");
+                    successMessage.appendChild(document.createTextNode("Order successfully created."));
+                    successMessageContainer.innerHTML = ""; // Clear previous messages
+                    successMessageContainer.appendChild(successMessage);
+
+                    console.log("Order created ");
+                },
+                error: function (error) {
+                    console.error("Error creating order: ", error);
+                }
+            });
+        }
+
+
+    </script>
+
+</body>
+</html>
