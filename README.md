@@ -6,10 +6,10 @@ This project is a database management system for a furniture business specializi
 The database is designed to handle various aspects of the business, including product cataloging, order fulfillment, shipping management, and producer and customer interactions.
 
 ## Features
-Furniture Management: Stores detailed information about furniture, including type, material, and pricing.  
-Order Processing: Tracks customer orders, selling platforms, and shipping details.  
-Shipping & Delivery: Manages logistics and delivery processes.  
-Stored Procedures & Triggers: Implements automation for updating orders and managing inventory.  
+**Furniture Management:** Stores detailed information about furniture, including type, material, and pricing.  
+**Order Processing:** Tracks customer orders, selling platforms, and shipping details.  
+**Shipping & Delivery:** Manages logistics and delivery processes.  
+**Stored Procedures & Triggers:** Implements automation for updating orders and managing inventory.  
 
 ## Scope
 
@@ -21,10 +21,10 @@ Stored Procedures & Triggers: Implements automation for updating orders and mana
 ## Database Structure
 The database includes the following key entities:  
 
-Furniture: Various types such as tables, consoles, and epoxy tables.   
-Producers & Customers: Tracks manufacturers and buyers.  
-Orders & Selling Platforms: Manages customer purchases and online platforms.  
-Shipping: Stores shipping details and delivery status.  
+**Furniture:** Various types such as tables, consoles, and epoxy tables.   
+**Producers & Customers:** Tracks manufacturers and buyers.  
+**Orders & Selling Platforms:** Manages customer purchases and online platforms.  
+**Shipping:** Stores shipping details and delivery status.  
 
 After designing the Relational Database Diagram, the following Entity-Relationship Diagram is designed:  
 
